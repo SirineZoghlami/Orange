@@ -1,21 +1,14 @@
-# Use an official Java runtime as a parent image
-FROM openjdk:17-jdk-alpine
+# Use a base image with JDK
+FROM openjdk:17-jdk
 
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
-WORKDIR /myapp
+# Set the working directory
+WORKDIR /app
 
-# The application's jar file
-ARG JAR_FILE=target/Orange-0.0.1-SNAPSHOT.jar
+# Copy the jar file into the container
+COPY target/myapp.jar /app/myapp.jar
 
-# Add the application's jar to the container
-COPY ${JAR_FILE} app.jar
+# Expose port 8080 for the application
+EXPOSE 8080
 
-# Expose the port that the app will run on
-EXPOSE 8083
-
-# Environment variables for MySQL connection
-
-
-# Run the jar file
-ENTRYPOINT ["java", "-Dserver.port=8083", "-jar", "/app.jar"]
+# Define the command to run the application
+CMD ["java", "-jar", "myapp.jar"]
