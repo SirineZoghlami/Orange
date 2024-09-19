@@ -1,11 +1,32 @@
 version: '3.8'
 
 services:
+  # Spring Boot application
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: sirine11/orange:latest
+    container_name: spring-boot-app
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Expose port 8080 for the application
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/orange_db
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootpassword
+    depends_on:
+      - mysql
+
+  # MySQL database
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: orange_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"  # Expose port 3306 for MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
